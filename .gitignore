@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Private signing material
+*.pem
+*.key
+*.jwk

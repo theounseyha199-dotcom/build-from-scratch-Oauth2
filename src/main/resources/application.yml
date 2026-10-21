@@ -6,15 +6,18 @@ spring:
     username: ${AUTH_DB_USER:postgres}
     password: ${AUTH_DB_PASSWORD:12345}
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
 
 server:
-  port: 9001
+  port: ${AUTH_SERVER_PORT:9001}
 
 app:
   oauth:
-    issuer: ${AUTH_ISSUER:http://localhost:9000}
+    issuer: ${AUTH_ISSUER:http://localhost:${server.port}}
+    signing-private-key-file: ${AUTH_SIGNING_PRIVATE_KEY_FILE:}
+    signing-public-key-file: ${AUTH_SIGNING_PUBLIC_KEY_FILE:}
     client-id: ${AUTH_CLIENT_ID:postman-client}
     client-secret: ${AUTH_CLIENT_SECRET:dev-secret-change-me}
     oidc-client-id: ${AUTH_OIDC_CLIENT_ID:oidc-client}

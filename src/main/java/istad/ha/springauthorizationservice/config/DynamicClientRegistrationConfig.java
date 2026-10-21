@@ -7,10 +7,14 @@ import java.util.function.Consumer;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.oidc.OidcClientRegistration;
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcClientConfigurationAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcClientRegistrationAuthenticationProvider;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcClientRegistrationAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcClientRegistrationAuthenticationValidator;
 import org.springframework.security.oauth2.server.authorization.oidc.converter.OidcClientRegistrationRegisteredClientConverter;
 import org.springframework.security.oauth2.server.authorization.oidc.converter.RegisteredClientOidcClientRegistrationConverter;
@@ -54,7 +58,18 @@ final class DynamicClientRegistrationConfig {
                     OidcClientRegistrationAuthenticationValidator.DEFAULT_REDIRECT_URI_VALIDATOR
                         .andThen(OidcClientRegistrationAuthenticationValidator.DEFAULT_POST_LOGOUT_REDIRECT_URI_VALIDATOR)
                         .andThen(OidcClientRegistrationAuthenticationValidator.DEFAULT_JWK_SET_URI_VALIDATOR)
-                        .andThen(OidcClientRegistrationAuthenticationValidator.SIMPLE_SCOPE_VALIDATOR));
+                        .andThen(OidcClientRegistrationAuthenticationValidator.SIMPLE_SCOPE_VALIDATOR)
+                        .andThen(context -> {
+                            var registration = ((OidcClientRegistrationAuthenticationToken) context.getAuthentication())
+                                .getClientRegistration();
+                            if (registration != null && registration.getScopes() != null
+                                    && registration.getScopes().stream().anyMatch(scope ->
+                                        "client.create".equals(scope) || "client.read".equals(scope))) {
+                                throw new OAuth2AuthenticationException(new OAuth2Error(
+                                    OAuth2ErrorCodes.INVALID_SCOPE,
+                                    "Registrar scopes cannot be assigned through dynamic registration", null));
+                            }
+                        }));
                 provider.setRegisteredClientConverter(registeredClientConverter);
                 provider.setClientRegistrationConverter(clientRegistrationConverter);
             }

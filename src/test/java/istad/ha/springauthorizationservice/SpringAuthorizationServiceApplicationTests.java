@@ -502,6 +502,31 @@ class SpringAuthorizationServiceApplicationTests {
     }
 
     @Test
+    void dynamicRegistrationCannotGrantRegistrarScopes() throws Exception {
+        String tokenResponse = mockMvc.perform(post("/oauth2/token")
+                .with(httpBasic("registrar-client", "test-registrar-secret"))
+                .param("grant_type", "client_credentials")
+                .param("scope", "client.create"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+        String initialToken = new ObjectMapper().readTree(tokenResponse).get("access_token").asText();
+
+        mockMvc.perform(post("/connect/register")
+                .header("Authorization", "Bearer " + initialToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "client_name": "privileged-client",
+                      "grant_types": ["authorization_code"],
+                      "redirect_uris": ["https://client.example.org/callback"],
+                      "scope": "client.create client.read"
+                    }
+                    """))
+            .andExpect(status().is4xxClientError())
+            .andExpect(jsonPath("$.error").value("invalid_scope"));
+    }
+
+    @Test
     void consentCanBeSavedAndLoaded() {
         String clientId = registeredClientRepository.findByClientId("oidc-client").getId();
         OAuth2AuthorizationConsent consent = OAuth2AuthorizationConsent.withId(clientId, "user")

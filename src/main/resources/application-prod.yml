@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${AUTH_DB_URL}
+    username: ${AUTH_DB_USER}
+    password: ${AUTH_DB_PASSWORD}
+
+app:
+  oauth:
+    issuer: ${AUTH_ISSUER}
+    signing-private-key-file: ${AUTH_SIGNING_PRIVATE_KEY_FILE}
+    signing-public-key-file: ${AUTH_SIGNING_PUBLIC_KEY_FILE}
+    client-secret: ${AUTH_CLIENT_SECRET}
+    oidc-client-secret: ${AUTH_OIDC_CLIENT_SECRET}
+    custom-client-secret: ${AUTH_CUSTOM_CLIENT_SECRET}
+    registrar-client-secret: ${AUTH_REGISTRAR_CLIENT_SECRET}
+    tenant-client-secret: ${AUTH_TENANT_CLIENT_SECRET}
+    user-password: ${AUTH_USER_PASSWORD}
