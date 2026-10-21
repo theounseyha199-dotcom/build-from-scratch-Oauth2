@@ -11,7 +11,7 @@ spring:
       ddl-auto: validate
 
 server:
-  port: ${AUTH_SERVER_PORT:9001}
+  port: ${AUTH_SERVER_PORT:9000}
 
 app:
   oauth:
