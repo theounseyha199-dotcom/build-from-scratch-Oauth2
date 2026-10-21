@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in · ISTAD Identity</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="/css/login.css">
+</head>
+<body>
+<main class="page-shell">
+    <section class="login-card" aria-labelledby="login-title">
+        <div class="identity-panel">
+            <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+            <p class="eyebrow">ISTAD IDENTITY</p>
+            <h1 id="login-title">Sign in to continue.</h1>
+            <p class="identity-note">Use your account to approve access to the application that sent you here.</p>
+            <div class="identity-rule" aria-hidden="true"></div>
+            <p class="identity-footer">One account. Controlled access.</p>
+        </div>
+        <div class="form-panel">
+            <div class="form-heading">
+                <p class="step-label">ACCOUNT ACCESS</p>
+                <h2>Your credentials</h2>
+                <p>Enter the username and password for your account.</p>
+            </div>
+
+            <p class="status status-error" role="alert" th:if="${param.error}">The username or password is incorrect. Try again.</p>
+            <p class="status status-success" role="status" th:if="${param.logout}">You have signed out.</p>
+
+            <form class="login-form" th:action="@{/login}" method="post" novalidate>
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                </div>
+                <button type="submit">Sign in</button>
+            </form>
+            <p class="form-footnote">Your password stays private to this sign-in.</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

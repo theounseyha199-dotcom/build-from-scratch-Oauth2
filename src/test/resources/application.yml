@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:authorization_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+app:
+  oauth:
+    issuer: http://localhost:9000
+    client-id: postman-client
+    client-secret: test-machine-secret
+    oidc-client-id: oidc-client
+    oidc-client-secret: test-oidc-secret
+    oidc-redirect-uri: http://127.0.0.1:8080/login/oauth2/code/oidc-client
+    postman-redirect-uri: https://oauth.pstmn.io/v1/browser-callback
+    public-client-id: public-client
+    public-origin: http://127.0.0.1:4200
+    public-redirect-uri: http://127.0.0.1:4200
+    custom-client-id: custom-code-client
+    custom-client-secret: test-custom-secret
+    registrar-client-id: registrar-client
+    registrar-client-secret: test-registrar-secret
+    tenant-client-secret: test-tenant-secret
+    user-name: user
+    user-password: test-password
+    user-display-name: Test User
+    user-email: user@example.com
